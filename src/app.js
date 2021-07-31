@@ -92,7 +92,7 @@ function modalClose() {
   refs.lightboxImage.alt = ""
 }
 
-refs.galleryList.addEventListener('click', () => {
+refs.galleryList.addEventListener('click', (event) => {
   event.preventDefault()
   if (event.target.nodeName !== 'IMG') {
     return;
