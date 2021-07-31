@@ -69,7 +69,6 @@ const refs = {
   galleryList: document.querySelector(".gallery"),
   lightbox: document.querySelector(".lightbox"),
   lightboxOverlay: document.querySelector(".lightbox__overlay"),
-  lightboxContent: document.querySelector(".lightbox__content"),
   lightboxImage: document.querySelector(".lightbox__image"),
   btnClose: document.querySelector(".lightbox__button")
 }
@@ -87,7 +86,13 @@ function createGallery() {
 }
 createGallery()
 
-refs.galleryList.addEventListener('click', (event) => {
+function modalClose() {
+  refs.lightbox.classList.remove("is-open")
+  refs.lightboxImage.src = ""
+  refs.lightboxImage.alt = ""
+}
+
+refs.galleryList.addEventListener('click', () => {
   event.preventDefault()
   if (event.target.nodeName !== 'IMG') {
     return;
@@ -97,8 +102,33 @@ refs.galleryList.addEventListener('click', (event) => {
   refs.lightboxImage.alt = event.target.alt
 })
 
-refs.btnClose.addEventListener('click', () => {
-  refs.lightbox.classList.remove("is-open")
-  refs.lightboxImage.src = ""
-  refs.lightboxImage.alt = ""
+refs.btnClose.addEventListener('click', modalClose)
+
+refs.lightboxOverlay.addEventListener('click', (event) => { 
+  if (event.target === event.currentTarget) {
+    modalClose()
+  }
 })
+
+refs.galleryItems = document.querySelectorAll(".gallery__item")
+
+window.addEventListener('keydown', (event) => {
+  let index = 0
+  if (event.key === "Escape") {
+    modalClose()
+  } else {
+    galleryItems.forEach((e) => {
+      if (e.original === refs.lightboxImage.src) {
+        index = galleryItems.indexOf(e)
+      }
+    })
+    if (event.key === "ArrowRight") {
+      refs.lightboxImage.src = galleryItems[index + 1].original
+      refs.lightboxImage.alt = galleryItems[index + 1].description
+    } if (event.key === "ArrowLeft") {
+      refs.lightboxImage.src = galleryItems[index - 1].original
+      refs.lightboxImage.alt = galleryItems[index - 1].description
+    }
+  }
+})
+
